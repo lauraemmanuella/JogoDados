@@ -16,35 +16,42 @@ public class Jogo {
     private final Dado dado1 = new Dado();
     private final Dado dado2 = new Dado();
 
-    private Jogador jogador1, jogador2;
+    private Jogador[] jogadores;
 
     private int resultado;
 
     public void inserirJogadores() {
-        System.out.println("Jogador1, informe seu nome:");
-        jogador1 = new Jogador(entrada.next());
+        System.out.println("Quantos jogadores irão participar?");
+        int qtd = 0;
+        do {
+            System.out.println("Maximo 11 jogadores");
+            qtd = entrada.nextInt();
+        } while (qtd > 11);
+        jogadores = new Jogador[qtd];
 
-        System.out.println("Jogador2, informe seu nome:");
-        jogador2 = new Jogador(entrada.next());
+        for (int i = 0; i < jogadores.length; i++) {
+            System.out.println("Jogador " + (i + 1) + " informe seu nome:");
+            jogadores[i] = new Jogador(entrada.next());
+        }
 
     }
 
     public void inserirApostas() {
         int aposta;
-        do {
-            System.out.println(jogador1.getNome() + " informe sua aposta:");
-            aposta = entrada.nextInt();
-        } while (aposta < 2 || aposta > 12);
-        jogador1.setValorAposta(aposta);
+        for (Jogador j : jogadores) {
+            do {
+                System.out.println(j.getNome() + " informe sua aposta:");
+                aposta = entrada.nextInt();
+            } while (aposta < 2 || aposta > 12);
+            
+            /*
+            TODO aqui teria que verificar se as apostas estao se repetindo
+             */
+            
+            j.setValorAposta(aposta);
 
-        do {
-            System.out.println(jogador2.getNome() + "informe sua aposta:");
-            aposta = entrada.nextInt();
-            if (aposta == jogador1.getValorAposta()) {
-                System.out.println("Valor ja escolhido. Tente outro.");
-            }
-        } while (aposta < 2 || aposta > 12 || aposta == jogador1.getValorAposta());
-        jogador2.setValorAposta(aposta);
+            
+        }
     }
 
     public void jogarDados() {
@@ -58,13 +65,17 @@ public class Jogo {
     }
 
     public void mostrarVencedor() {
-        if (resultado == jogador1.getValorAposta()) {
-            System.out.println("Jogador1 venceu a aposta");
-        } else if (resultado == jogador2.getValorAposta()) {
-            System.out.println("Jogador2 venceu a aposta");
-        } else {
-            System.out.println("Computador venceu");
+        boolean ganhou = false;
+        for (Jogador j : jogadores) {
+            if (resultado == j.getValorAposta()) {
+                System.out.println(j.getNome() + " venceu a aposta");
+                ganhou = true;
+            }
         }
+        if(!ganhou){
+            System.out.println("O computador ganhou");    
+        }
+        
     }
 
 }
